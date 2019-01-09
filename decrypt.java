@@ -54,10 +54,12 @@ public class decrypt{
                         i++;
                     }
                 
-                // String str = new String(argv[0]);
-                String[] result = decode(c, keys);
-                System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
-                
+                    // String str = new String(argv[0]);
+                    String[] result = decode(c, keys);
+                    //System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
+                    if (result[0] != null){
+                        System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
+                    }
                 }
             }catch(Exception e ){
                 System.out.println(e);
