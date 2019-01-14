@@ -10,11 +10,11 @@ import java.util.Base64;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import anubis.AnubisDB;
 
-/* Code to decrypt twitter CC communication for Anubis */
 
-public class decrypt{
+/* Code to decrypt Chinese tweets for Anubis CC communication*/
+
+public class Anubis_Dec{
     public static final String[] s = new String[]{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M", "q", "w", "e", "r", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m", "=", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     public static final String[] t = new String[]{"\u9700", "\u8981", "\u610f", "\u5728", "\u4e2d", "\u5e76", "\u6ca1", "\u6709", "\u4e2a", "\u6982", "\u5ff5", "\u5c0f", "\u8bed", "\u62fc", "\u4ea1", "\u53ca", "\u6ce8", "\u9c9c", "\u65b0", "\u6b7b", "\u4e4b", "\u7c7b", "\u963f", "\u52aa", "\u6bd4", "\u62c9", "\u4e01", "\u5316", "\u4f53", "\u7cfb", "\u90fd", "\u53ea", "\u65af", "\u4e00", "\u5957", "\u7528", "\u6076", "\u4ef6", "\u6765", "\u6807", "\u97f3", "\u7684", "\u7b26", "\u53f7", "\u800c", "\u4e0d", "\u662f", "\u5b57", "\u6bcd", "\u5bc2", "\u5bde", "\u808f", "\u4f60", "\u5988", "\u5c44", "\u5f15", "\u811a", "\u5438", "\u5458", "\u4f1a", "\u818f", "\u836f"};
     public static final String keyFile = "data/keys.dat";
@@ -22,52 +22,30 @@ public class decrypt{
 
     public static void main(String argv[]){
         try{
-            HttpURLConnection a;
-            BufferedReader b;
             String c;
             String[] keys = readLines(keyFile);
-            String[] twitterCC = readLines(twitterFile);
-            
-            AnubisDB.createDB();
-
-            for (int j=0; j < twitterCC.length; j++){
-                a = (HttpURLConnection) new URL(twitterCC[j]).openConnection();
-                a.setRequestMethod("GET");
-                a.connect();
-                InputStream inputStream = a.getInputStream();
-                StringBuffer stringBuffer = new StringBuffer();
-                b = new BufferedReader(new InputStreamReader(inputStream));
-                while (true) {
-                    String readLine = b.readLine();
-                    if (readLine == null) {
-                            break;
-                        }
-                        stringBuffer.append(readLine);
-                    }
-                    //System.out.println(stringBuffer.toString());
-                    c = stringBuffer.toString().replace(" ", "");
-                    
-                    c = f(c, "苏尔的开始", "苏尔苏尔完");
-                    int i = 0;
-                    while (true) {
-                        
-                        if (i >= s.length) {
-                            break;
-                        }
-                        String str = c;
-                        CharSequence charSequence = t[i];
-                        c = str.replace(charSequence, s[i]);
-                        i++;
-                    }
+            c = argv[0].toString().replace(" ", "");
+            c = f(c, "苏尔的开始", "苏尔苏尔完");
+            int i = 0;
+            while (true) {
                 
-                    // String str = new String(argv[0]);
-                    String[] result = decode(c, keys);
-                    //System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
-                    if (result[0] != null){
-                        System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
-                        AnubisDB.insertEntry(result[0], result[1], twitterCC[j]);
-                    }
+                if (i >= s.length) {
+                    break;
                 }
+                String str = c;
+                CharSequence charSequence = t[i];
+                c = str.replace(charSequence, s[i]);
+                i++;
+            }
+        
+            // String str = new String(argv[0]);
+            String[] result = decode(c, keys);
+            //System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
+            if (result[0] != null){
+                System.out.println(result[0] + " (" + result[1] + ")");
+                
+            }
+        
             }catch(Exception e ){
                 System.out.println(e);
             }
