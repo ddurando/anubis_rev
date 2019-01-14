@@ -8,9 +8,7 @@ import java.text.SimpleDateFormat;
 public class AnubisDB {
    private static Connection c = null;
 
-
    public static Connection createOrOpenDatabase(String database) {
-
       String url = "jdbc:sqlite:" + database;
       try {
          Connection conn = DriverManager.getConnection(url);
@@ -21,11 +19,9 @@ public class AnubisDB {
   }
  
    public static int createDB(){
-     
       Statement stmt = null;
-      
-      try {
-         
+
+      try {      
          Connection conn = createOrOpenDatabase("db/AnubisCC.db");
 
          stmt = conn.createStatement();
@@ -46,10 +42,10 @@ public class AnubisDB {
 
    public static int insertEntry(String url, String key, String twitterAcc) throws Exception{
       Statement stmt = null;
-      
       Date dt = new Date();
       DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
       String strDate = dateFormat.format(dt);
+
       try {
          Connection conn = createOrOpenDatabase("db/AnubisCC.db");
          conn.setAutoCommit(false);
@@ -57,12 +53,7 @@ public class AnubisDB {
 
          String sql = String.format("SELECT * FROM CCDB WHERE URL='%s' AND TWITTER_ACC='%s' AND KEY='%s';", url, twitterAcc, key);       
          ResultSet rs = stmt.executeQuery(sql);
-         
-
          if (!rs.next()){
-        
-         
-
             stmt = conn.createStatement();
             sql = String.format("INSERT INTO CCDB (URL,KEY,TWITTER_ACC,DATE) " +
                            "VALUES ('%s', '%s', '%s', '%s');", url, key, twitterAcc, strDate); 
@@ -74,7 +65,6 @@ public class AnubisDB {
       } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             return 1;
-
       }
       return 0;
    }
