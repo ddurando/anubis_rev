@@ -41,24 +41,31 @@ public class AnubisDB {
    }
 
    public static int insertEntry(String url, String key, String twitterAcc) throws Exception{
-      Statement stmt = null;
+      Statement stmt1 = null;
+      Statement stmt2 = null;
       Date dt = new Date();
-      DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+      DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
       String strDate = dateFormat.format(dt);
 
       try {
          Connection conn = createOrOpenDatabase("db/AnubisCC.db");
          conn.setAutoCommit(false);
-         stmt = conn.createStatement();
+         stmt1 = conn.createStatement();
 
          String sql = String.format("SELECT * FROM CCDB WHERE URL='%s' AND TWITTER_ACC='%s' AND KEY='%s';", url, twitterAcc, key);       
-         ResultSet rs = stmt.executeQuery(sql);
-         if (!rs.next()){
-            stmt = conn.createStatement();
+         ResultSet rs = stmt1.executeQuery(sql);
+         
+         if (rs.next()){
+            stmt1.close();
+            conn.close();
+         }else{
+            stmt1.close();
+            stmt2 = conn.createStatement();
             sql = String.format("INSERT INTO CCDB (URL,KEY,TWITTER_ACC,DATE) " +
                            "VALUES ('%s', '%s', '%s', '%s');", url, key, twitterAcc, strDate); 
-            stmt.executeUpdate(sql);
-            stmt.close();
+            stmt2.executeUpdate(sql);
+            stmt2.close();
+            stmt1.close();
             conn.commit();
             conn.close();
          }
