@@ -9,6 +9,6 @@ will run throught the list of known bots and update the database if it find new 
 
 
 ```bash
-`java Anubis_Dec "<CHINESE CHARS>"
+java Anubis_Dec "<CHINESE CHARS>"
 ```
  will print the CC and the key if it finds one.
