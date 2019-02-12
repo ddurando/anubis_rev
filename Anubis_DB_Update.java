@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import anubis.AnubisDB;
 
 /* Code to decrypt twitter CC communication for Anubis */
@@ -21,16 +22,24 @@ public class Anubis_DB_Update{
     public static final String twitterFile = "data/twitter_acc.dat";
 
     public static void main(String argv[]){
-        try{
+        
             HttpURLConnection a;
             BufferedReader b;
             String c;
-            String[] keys = readLines(keyFile);
-            String[] twitterCC = readLines(twitterFile);
+            String[] keys = {};
+            String[] twitterCC = {};
+
+            try{
+                keys = readLines(keyFile);
+                twitterCC = readLines(twitterFile);
             
-            AnubisDB.createDB();
+                AnubisDB.createDB();
+            }catch(Exception e ){
+                System.out.println(e);
+            }
 
             for (int j=0; j < twitterCC.length; j++){
+                try{
                 a = (HttpURLConnection) new URL(twitterCC[j]).openConnection();
                 a.setRequestMethod("GET");
                 a.connect();
@@ -67,9 +76,10 @@ public class Anubis_DB_Update{
                         System.out.println(twitterCC[j] + " -> " + result[0] + " (" + result[1] + ")");
                         AnubisDB.insertEntry(result[0], result[1], twitterCC[j]);
                     }
+                }catch(Exception e ){
+                    System.out.println(e);
                 }
-            }catch(Exception e ){
-                System.out.println(e);
+            
             }
         
         } 
